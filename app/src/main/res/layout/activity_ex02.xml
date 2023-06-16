@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivityEx01">
+    tools:context=".ActivityEx02">
 
     <TextView
         android:id="@+id/tv_quoteId"
@@ -58,4 +58,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_quote"
         app:layout_constraintVertical_bias="0.5" />
+
+    <ToggleButton
+        android:id="@+id/tbtn_pinned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:checked="false"
+        android:text="ToggleButton"
+        android:textOff="Pin"
+        android:textOn="Unpin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
