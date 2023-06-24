@@ -18,7 +18,7 @@
             android:name=".ListFavoriteQuote"
             android:exported="false" />
         <activity
-            android:name=".ActivityEx03"
+            android:name=".ActivityEx05"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

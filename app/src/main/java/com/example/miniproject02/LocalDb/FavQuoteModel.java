@@ -5,5 +5,4 @@ public class FavQuoteModel {
     public static String COLUMN_ID = "id";
     public static String COLUMN_QUOTE = "quote";
     public static String COLUMN_AUTHOR = "author";
-
 }

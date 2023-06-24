@@ -5,12 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,16 +23,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.miniproject02.LocalDb.QuoteHelper;
+import com.example.miniproject02.LocalDb.SettingsHelper;
+import com.example.miniproject02.adapters.SpinnerAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
-public class ActivityEx03 extends AppCompatActivity {
+public class ActivityEx05 extends AppCompatActivity {
     TextView tv_quoteId, tv_quote, tv_quoteAth;
     ToggleButton tbtn_pinned;
     Spinner sp_colors;
@@ -41,13 +42,15 @@ public class ActivityEx03 extends AppCompatActivity {
     ImageView iv_infav, iv_listFavorite;
     boolean isFav = false;
     Button btn_exit;
-    QuoteHelper db;
+
+    QuoteHelper db_fav_quote;
+    SettingsHelper db_settings;
 
     @SuppressLint("DefaultLocale")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ex03);
+        setContentView(R.layout.activity_ex05);
 
         URL = String.format("https://dummyjson.com/quotes/%d", new Random().nextInt(80 - 25 + 1) + 25);
 
@@ -58,42 +61,28 @@ public class ActivityEx03 extends AppCompatActivity {
         sp_colors = findViewById(R.id.sp_colors);
         iv_infav = findViewById(R.id.infav);
         btn_exit = findViewById(R.id.btn_exit);
-        db = new QuoteHelper(this);
+        db_fav_quote = new QuoteHelper(this);
         iv_listFavorite = findViewById(R.id.iv_listfavorite);
-
+        db_settings = new SettingsHelper(this);
 
         //region spinner
-        sharedPreferencesColors = getSharedPreferences("saved-color", MODE_PRIVATE);
+        ArrayList<String> colorsName = new ArrayList<>();
+        ArrayList<String> colorsCode = new ArrayList<>();
 
-        ArrayList<String> colorList = new ArrayList<>(Arrays.asList(
-                "Default",
-                "LightSalmon",
-                "Plum",
-                "PaleGreen",
-                "CornflowerBlue"
-        ));
-
-        ArrayAdapter<String> colorAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                colorList
-        );
-
-        sp_colors.setAdapter(colorAdapter);
-
-        int defaultColor = R.color.white;
-        String defaultColorName = "Default";
-
-        int savedColor = sharedPreferencesColors.getInt(defaultColorName, 0);
-        if (savedColor != 0) {
-            defaultColor = savedColor;
-            defaultColorName = sharedPreferencesColors.getString("name", null);
+        for (int i = 0; i < db_settings.getColors().size(); i++) {
+            colorsName.add(db_settings.getColors().get(i).getName());
+            colorsCode.add(db_settings.getColors().get(i).getCode());
         }
-        getWindow().getDecorView().setBackgroundColor(getColor(defaultColor));
 
-        for (int i = 0; i < colorList.size(); i++) {
-            int colorName = sharedPreferencesColors.getInt(colorList.get(i), 0);
-            if (colorName != 0 && colorList.get(i).equals(defaultColorName)) {
+        SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this,colorsName,colorsCode);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        sp_colors.setAdapter(spinnerAdapter);
+
+        String backgroundColorName = db_settings.getBackgroundName();
+        Toast.makeText(this, ""+backgroundColorName, Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < colorsName.size(); i++) {
+            if (colorsName.get(i).equals(backgroundColorName)) {
                 sp_colors.setSelection(i);
                 break;
             }
@@ -102,39 +91,14 @@ public class ActivityEx03 extends AppCompatActivity {
         sp_colors.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SharedPreferences.Editor editor = sharedPreferencesColors.edit();
-                int colorValue;
-                String colorName;
-                switch (position) {
-                    case 0:
-                        colorValue = R.color.white;
-                        colorName = "Default";
-                        break;
-                    case 1:
-                        colorValue = R.color.LightSalmon;
-                        colorName = "LightSalmon";
-                        break;
-                    case 2:
-                        colorValue = R.color.Plum;
-                        colorName = "Plum";
-                        break;
-                    case 3:
-                        colorValue = R.color.PaleGreen;
-                        colorName = "PaleGreen";
-                        break;
-                    case 4:
-                        colorValue = R.color.CornflowerBlue;
-                        colorName = "CornflowerBlue";
-                        break;
-                    default:
-                        return;
-                }
+                String selectedColorName = parent.getItemAtPosition(position).toString();
 
-                editor.putInt(colorName, colorValue);
-                editor.putString("name", colorName);
-                editor.apply();
+                db_settings.updateBackgroundName(selectedColorName);
 
-                getWindow().getDecorView().setBackgroundColor(getColor(colorValue));
+                String selectedColorCode = db_settings.getBackgroundColor(); // Retrieve the color code from the database
+
+                // Set the background color dynamically
+                getWindow().getDecorView().setBackgroundColor(Color.parseColor(selectedColorCode));
             }
 
             @Override
@@ -169,7 +133,7 @@ public class ActivityEx03 extends AppCompatActivity {
                 author = tv_quoteAth.getText().toString();
 
                 if (!isFav) {
-                    db.add(id1, quote, author);
+                    db_fav_quote.add(id1, quote, author);
                     iv_infav.setImageResource(R.drawable.fav);
                     Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
                     isFav = !isFav;
@@ -188,25 +152,25 @@ public class ActivityEx03 extends AppCompatActivity {
 
         iv_infav.setOnClickListener(v -> {
             if (isFav) {
-                db.remove(tv_quoteId.getText().toString());
+                db_fav_quote.remove(tv_quoteId.getText().toString());
                 iv_infav.setImageResource(R.drawable.infav);
                 Toast.makeText(this, "Removed from favorites", Toast.LENGTH_SHORT).show();
                 tbtn_pinned.setChecked(false);
                 getJsonQuote();
             } else {
-                db.add(tv_quoteId.getText().toString(), tv_quote.getText().toString(), tv_quoteAth.getText().toString());
+                db_fav_quote.add(tv_quoteId.getText().toString(), tv_quote.getText().toString(), tv_quoteAth.getText().toString());
                 iv_infav.setImageResource(R.drawable.fav);
                 Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
             }
             isFav = !isFav;
         });
 
-
-        btn_exit.setOnClickListener(v -> finish());
         iv_listFavorite.setOnClickListener(v -> {
-            Intent intent = new Intent(ActivityEx03.this, ListFavoriteQuote.class);
+            Intent intent = new Intent(ActivityEx05.this, ListFavoriteQuote.class);
             startActivity(intent);
         });
+
+        btn_exit.setOnClickListener(v -> finish());
     }
 
     public void getJsonQuote() {
@@ -239,8 +203,8 @@ public class ActivityEx03 extends AppCompatActivity {
     // To check if Quote is favorite or not
     public boolean isIt(String id) {
         boolean flag = false;
-        for (int i = 0; i < db.getQuotes().size(); i++) {
-            if (Objects.equals(db.getQuotes().get(i).getId(), id)) {
+        for (int i = 0; i < db_fav_quote.getQuotes().size(); i++) {
+            if (Objects.equals(db_fav_quote.getQuotes().get(i).getId(), id)) {
                 iv_infav.setImageResource(R.drawable.fav);
                 flag = true;
                 break;

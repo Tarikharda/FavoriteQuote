@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingEnd="10dp">
+
+
+    <TextView
+        android:id="@+id/color_name_tv"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+
+        android:paddingStart="10dp"
+        android:paddingTop="10dp"
+
+        android:paddingBottom="10dp"
+        android:textColor="#3A3A3A"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/color_hex_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="#707070"
+        android:textSize="16sp" />
+
+</LinearLayout>

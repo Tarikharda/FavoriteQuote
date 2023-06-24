@@ -27,7 +27,7 @@ public class QuoteHelper extends SQLiteOpenHelper {
     );
 
     private static final String SQL_DROP_FAV_TABLE = String.format(
-            "DROP TABLE %s IF EXIST",
+            "DROP TABLE %s",
             FavQuoteModel.TABLE_NAME
     );
 
