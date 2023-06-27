@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -33,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 
-public class ActivityEx05 extends AppCompatActivity {
+public class ActivityEx06 extends AppCompatActivity {
     TextView tv_quoteId, tv_quote, tv_quoteAth;
     ToggleButton tbtn_pinned;
     Spinner sp_colors;
@@ -50,7 +49,7 @@ public class ActivityEx05 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ex05);
+        setContentView(R.layout.activity_ex06);
 
         URL = String.format("https://dummyjson.com/quotes/%d", new Random().nextInt(80 - 25 + 1) + 25);
 
@@ -166,7 +165,7 @@ public class ActivityEx05 extends AppCompatActivity {
         });
 
         iv_listFavorite.setOnClickListener(v -> {
-            Intent intent = new Intent(ActivityEx05.this, ListFavoriteQuote.class);
+            Intent intent = new Intent(ActivityEx06.this, ListFavoriteQuote.class);
             startActivity(intent);
         });
 

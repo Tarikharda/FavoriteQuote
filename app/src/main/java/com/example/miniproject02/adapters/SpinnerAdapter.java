@@ -19,13 +19,13 @@ import com.example.miniproject02.R;
 import java.util.ArrayList;
 
 public class SpinnerAdapter extends ArrayAdapter<String> {
-    private ArrayList<String> color_liste;
-    private ArrayList<String> hex_liste;
+    private ArrayList<String> colorsName;
+    private ArrayList<String> colorsCode;
 
-    public SpinnerAdapter(Context context, ArrayList<String> color_liste, ArrayList<String> hex_liste) {
-        super(context, 0, color_liste);
-        this.color_liste = color_liste;
-        this.hex_liste = hex_liste;
+    public SpinnerAdapter(Context context, ArrayList<String> colorsName, ArrayList<String> colorsCode) {
+        super(context, 0, colorsName);
+        this.colorsName = colorsName;
+        this.colorsCode = colorsCode;
     }
 
     @NonNull
@@ -44,20 +44,18 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_item_spinner, parent, false);
         }
 
-        TextView color_name_tv = convertView.findViewById(R.id.color_name_tv);
-        TextView color_hex_tv = convertView.findViewById(R.id.color_hex_tv);
+        TextView tv_colorName = convertView.findViewById(R.id.tv_colorName);
+        TextView tv_colorCode = convertView.findViewById(R.id.tv_colorCode);
 
-        color_name_tv.setText(color_liste.get(position));
-        color_hex_tv.setText(hex_liste.get(position));
+        tv_colorName.setText(colorsName.get(position));
+        tv_colorCode.setText(colorsCode.get(position));
 
-        String colorHex = color_hex_tv.getText().toString();
-
+        String hexCode = tv_colorCode.getText().toString();
         @SuppressLint("UseCompatLoadingForDrawables")
-        Drawable backgroundDrawable = parent.getContext().getResources().getDrawable(R.drawable.card_widget);
-        backgroundDrawable.setColorFilter(Color.parseColor(colorHex), PorterDuff.Mode.SRC_IN);
+        Drawable backgroundDrawable = parent.getContext().getResources().getDrawable(R.drawable.hex_color_background);
+        backgroundDrawable.setColorFilter(Color.parseColor(hexCode), PorterDuff.Mode.SRC_IN);
+        tv_colorCode.setBackground(backgroundDrawable);
 
-        color_hex_tv.setBackground(backgroundDrawable);
-        color_hex_tv.setPadding(10,5,10,5);
 
         return convertView;
     }

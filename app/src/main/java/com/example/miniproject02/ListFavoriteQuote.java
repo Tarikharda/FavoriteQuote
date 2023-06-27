@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.example.miniproject02.LocalDb.ListFavoriteAdapter;
+import com.example.miniproject02.adapters.ListFavoriteAdapter;
 import com.example.miniproject02.LocalDb.QuoteHelper;
 
 import java.util.ArrayList;

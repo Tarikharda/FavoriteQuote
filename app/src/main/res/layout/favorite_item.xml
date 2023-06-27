@@ -5,7 +5,9 @@
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/item"
     app:cardCornerRadius="18dp"
-    app:cardElevation="3dp">
+    app:cardElevation="3dp"
+    android:id="@+id/layou_fav_item"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
